@@ -1,10 +1,5 @@
-const { execFile } = require('child_process');
-const util = require('util');
-const ffmpegPath = require('ffmpeg-static');
-const execFilePromise = util.promisify(execFile);
-
 /**
- * YouTube & YouTube Shorts Extractor with Universal Playability & Multi-Gateway Support
+ * YouTube & YouTube Shorts Extractor (Universal Fast Gateways & Thumbnails)
  */
 async function extractYouTube(url) {
   try {
@@ -19,56 +14,18 @@ async function extractYouTube(url) {
       videoId = match[2];
     }
 
-    let title = 'YouTube Video';
+    let title = 'YouTube Video / Shorts';
     let authorName = 'YouTube Creator';
     let cover = videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : '';
-    let duration = 0;
-    let likes = 0;
-    let views = 0;
-
-    // Try yt-dlp to get rich metadata
-    try {
-      const { stdout } = await execFilePromise('yt-dlp', [
-        '--remote-components', 'ejs:github',
-        '--js-runtimes', 'node:node',
-        '--ffmpeg-location', ffmpegPath,
-        '--dump-json',
-        '--no-warnings',
-        '--no-playlist',
-        cleanUrl
-      ], { timeout: 20000, maxBuffer: 15 * 1024 * 1024 });
-
-      const info = JSON.parse(stdout);
-      title = info.title || title;
-      authorName = info.uploader || info.channel || authorName;
-      cover = info.thumbnail || cover;
-      duration = info.duration || 0;
-      likes = info.like_count || 0;
-      views = info.view_count || 0;
-    } catch (e) {
-      // Fallback to oembed
-      console.warn('yt-dlp metadata failed, using fallback:', e.message);
-    }
 
     const downloads = [];
 
-    // 1. Direct Server Download MP4 Full HD (H.264 + AAC Audio)
-    downloads.push({
-      type: 'video',
-      label: 'Tải Trực Tiếp MP4 Full HD (Có Tiếng + Hình)',
-      quality: '1080p / 720p HD',
-      url: `/api/stream-ytdl?url=${encodeURIComponent(cleanUrl)}&ext=mp4`,
-      isDirectStream: true,
-      ext: 'mp4',
-      badge: 'Full HD MP4'
-    });
-
-    // 2. Fast Web Gateways
+    // 1. Fast Web Gateways (SaveFrom, SSYouTube, Y2Mate)
     if (videoId) {
       downloads.push({
         type: 'video',
-        label: 'Tải Nhanh qua Cổng SaveFrom HD',
-        quality: '1080p HD',
+        label: 'Tải Video YouTube MP4 Full HD (Qua Cổng SaveFrom)',
+        quality: '1080p / 720p HD',
         url: `https://en.savefrom.net/1-youtube-video-downloader-719.html?url=https://www.youtube.com/watch?v=${videoId}`,
         isExternal: true,
         ext: 'mp4',
@@ -77,35 +34,33 @@ async function extractYouTube(url) {
 
       downloads.push({
         type: 'video',
-        label: 'Tải Nhanh qua Cổng SSYouTube',
+        label: 'Tải Video YouTube (Qua Cổng SSYouTube)',
         quality: 'HD Stream',
         url: `https://ssyoutube.com/watch?v=${videoId}`,
         isExternal: true,
         ext: 'mp4',
         badge: 'SSYouTube'
       });
+
+      downloads.push({
+        type: 'audio',
+        label: 'Tách Nhạc MP3 YouTube (Qua Cổng Y2Mate MP3)',
+        quality: '320kbps MP3',
+        url: `https://www.y2mate.com/youtube-mp3/${videoId}`,
+        isExternal: true,
+        ext: 'mp3',
+        badge: 'Y2Mate MP3'
+      });
+
+      downloads.push({
+        type: 'image',
+        label: 'Tải Ảnh Bìa / Thumbnail MaxRes HD',
+        quality: 'MaxRes HD',
+        url: `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
+        ext: 'jpg',
+        badge: 'Thumbnail HD'
+      });
     }
-
-    // 3. Direct Server Audio MP3 320kbps
-    downloads.push({
-      type: 'audio',
-      label: 'Tách Nhạc MP3 / Audio Chuẩn (320kbps)',
-      quality: '320kbps MP3',
-      url: `/api/stream-ytdl?url=${encodeURIComponent(cleanUrl)}&ext=mp3`,
-      isDirectStream: true,
-      ext: 'mp3',
-      badge: 'Audio MP3'
-    });
-
-    // 4. Thumbnail HD
-    downloads.push({
-      type: 'image',
-      label: 'Ảnh Bìa / Thumbnail MaxRes HD',
-      quality: 'MaxRes HD',
-      url: cover || `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
-      ext: 'jpg',
-      badge: 'Thumbnail HD'
-    });
 
     return {
       platform: 'youtube',
@@ -117,8 +72,8 @@ async function extractYouTube(url) {
         avatar: 'https://www.youtube.com/s/desktop/fca59073/img/favicon_144x144.png'
       },
       cover,
-      duration,
-      stats: { likes, views },
+      duration: 0,
+      stats: { likes: 0, views: 0 },
       downloads
     };
   } catch (error) {

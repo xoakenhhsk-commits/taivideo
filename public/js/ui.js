@@ -108,10 +108,17 @@ const UI = {
       videoWrapper.style.display = 'block';
 
       // Pick direct video stream for in-browser player preview
-      const previewStream = videoDownloads.find(d => d.url && !d.isExternal) || videoDownloads[0];
-      if (previewStream && previewStream.url && !previewStream.isExternal) {
+      const previewStream = videoDownloads.find(d => d.url && !d.isExternal);
+      if (previewStream && previewStream.url) {
+        videoPlayer.style.display = 'block';
         videoPlayer.poster = data.cover || '';
         videoPlayer.src = previewStream.url;
+      } else if (data.cover) {
+        videoPlayer.style.display = 'block';
+        videoPlayer.poster = data.cover;
+        videoPlayer.removeAttribute('src');
+      } else {
+        videoPlayer.style.display = 'none';
       }
     }
 
