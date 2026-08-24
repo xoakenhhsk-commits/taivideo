@@ -24,6 +24,20 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(process.cwd(), 'public')));
+
+// Google Search Console Verification & SEO Files
+app.get('/google8bc5f504709b8e3b.html', (req, res) => {
+  res.type('text/html').send('google-site-verification: google8bc5f504709b8e3b.html');
+});
+
+app.get('/robots.txt', (req, res) => {
+  res.type('text/plain').send('User-agent: *\nAllow: /\n\nSitemap: https://taivideo-alpha.vercel.app/sitemap.xml\n');
+});
+
+app.get('/sitemap.xml', (req, res) => {
+  res.type('application/xml').send('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url>\n    <loc>https://taivideo-alpha.vercel.app/</loc>\n    <lastmod>2026-08-24</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>1.0</priority>\n  </url>\n</urlset>\n');
+});
 
 // Supported platforms list with metadata
 const SUPPORTED_PLATFORMS = [
