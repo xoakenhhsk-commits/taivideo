@@ -105,20 +105,16 @@ const UI = {
       `).join('');
     } else {
       albumGrid.style.display = 'none';
-      videoWrapper.style.display = 'block';
 
       // Pick direct video stream for in-browser player preview
       const previewStream = videoDownloads.find(d => d.url && !d.isExternal);
       if (previewStream && previewStream.url) {
+        videoWrapper.style.display = 'block';
         videoPlayer.style.display = 'block';
         videoPlayer.poster = data.cover || '';
         videoPlayer.src = previewStream.url;
-      } else if (data.cover) {
-        videoPlayer.style.display = 'block';
-        videoPlayer.poster = data.cover;
-        videoPlayer.removeAttribute('src');
       } else {
-        videoPlayer.style.display = 'none';
+        videoWrapper.style.display = 'none';
       }
     }
 

@@ -48,8 +48,14 @@ async function extractDouyin(rawInput) {
       itemId = idMatch[1];
     }
 
-    // 3. Engine 1: TikWM API
-    for (const targetUrl of [resolvedUrl, cleanUrl]) {
+    // 3. Engine 1: TikWM API (Try resolved URL first, then clean URL)
+    const testUrls = [resolvedUrl, cleanUrl];
+    if (itemId) {
+      testUrls.unshift(`https://www.douyin.com/video/${itemId}`);
+      testUrls.unshift(`https://www.iesdouyin.com/share/video/${itemId}/`);
+    }
+
+    for (const targetUrl of testUrls) {
       try {
         const tikwmRes = await axios.post(
           'https://www.tikwm.com/api/',
@@ -65,7 +71,7 @@ async function extractDouyin(rawInput) {
               'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
               'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
             },
-            timeout: 12000
+            timeout: 10000
           }
         );
 
@@ -136,7 +142,7 @@ async function extractDouyin(rawInput) {
           // Fast Web Gateways for Douyin
           downloads.push({
             type: 'video',
-            label: 'Tải qua Cổng SnapTik Douyin',
+            label: 'Tải qua Cổng SnapTik Douyin (Dự phòng)',
             quality: '1080p HD',
             url: `https://snaptik.app/vn?url=${encodeURIComponent(cleanUrl)}`,
             isExternal: true,
@@ -164,58 +170,58 @@ async function extractDouyin(rawInput) {
           };
         }
       } catch (e) {
-        console.warn('TikWM attempt failed:', e.message);
+        // Try next candidate
       }
     }
 
-    // 4. Engine 2: Douyin ItemInfo API (Official fallback)
+    // 4. Engine 2: Douyin Web Detail API
     if (itemId) {
       try {
-        const itemRes = await axios.get(`https://www.iesdouyin.com/web/api/v2/aweme/iteminfo/?item_ids=${itemId}`, {
+        const detailRes = await axios.get(`https://www.douyin.com/aweme/v1/web/aweme/detail/?aweme_id=${itemId}&aid=1128&version_name=23.5.0&device_platform=android&os_version=2333`, {
           headers: {
-            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.5 Mobile/15E148 Safari/604.1'
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Referer': `https://www.douyin.com/video/${itemId}`,
+            'Cookie': 's_v_web_id=verify_lay2478d_8Z4a9e9g_tD8M_4m8j_9fD9_9d1a1b1c1d1e;'
           },
           timeout: 8000
         });
 
-        if (itemRes.data?.item_list && itemRes.data.item_list.length > 0) {
-          const item = itemRes.data.item_list[0];
-          const isImages = Array.isArray(item.images) && item.images.length > 0;
+        if (detailRes.data?.aweme_detail) {
+          const aweme = detailRes.data.aweme_detail;
+          const isImages = Array.isArray(aweme.images) && aweme.images.length > 0;
           const downloads = [];
 
           if (isImages) {
-            const imgUrls = item.images.map(img => img.url_list?.[0] || img.url_list?.[1]).filter(Boolean);
+            const imgUrls = aweme.images.map(img => img.url_list?.[0]).filter(Boolean);
             downloads.push({
               type: 'album',
               label: `Bộ sưu tập ảnh Douyin (${imgUrls.length} ảnh HD)`,
               quality: 'HD Photos',
               images: imgUrls
             });
-          } else if (item.video?.play_addr?.url_list?.length > 0) {
-            // Replace playwm with play to remove watermark
-            const rawVideoUrl = item.video.play_addr.url_list[0].replace('playwm', 'play');
+          } else if (aweme.video?.play_addr?.url_list?.length > 0) {
+            const directPlay = aweme.video.play_addr.url_list[0].replace('playwm', 'play');
             downloads.push({
               type: 'video',
-              label: 'Tải Video Douyin HD (Không Logo)',
-              quality: '1080p / 720p HD',
-              url: rawVideoUrl,
+              label: 'Tải Video Douyin HD Không Logo (1080p)',
+              quality: '1080p HD',
+              url: directPlay,
               ext: 'mp4',
               badge: 'No-Watermark'
             });
           }
 
-          if (item.music?.play_url?.url_list?.length > 0) {
+          if (aweme.music?.play_url?.url_list?.length > 0) {
             downloads.push({
               type: 'audio',
-              label: 'Tách Nhạc Nền Douyin (Audio MP3)',
+              label: 'Tách Nhạc Nền Douyin (Audio MP3 Gốc)',
               quality: '320kbps MP3',
-              url: item.music.play_url.url_list[0],
+              url: aweme.music.play_url.url_list[0],
               ext: 'mp3',
               badge: 'Audio MP3'
             });
           }
 
-          // Gateways
           downloads.push({
             type: 'video',
             label: 'Tải qua Cổng SnapTik Douyin',
@@ -228,25 +234,25 @@ async function extractDouyin(rawInput) {
 
           return {
             platform: 'douyin',
-            title: item.desc || 'Douyin Video (抖音)',
+            title: aweme.desc || 'Douyin Video (抖音)',
             author: {
-              name: item.author?.nickname || 'Douyin User',
-              username: item.author?.unique_id || '',
-              avatar: item.author?.avatar_thumb?.url_list?.[0] || ''
+              name: aweme.author?.nickname || 'Douyin User',
+              username: aweme.author?.unique_id || '',
+              avatar: aweme.author?.avatar_thumb?.url_list?.[0] || ''
             },
-            cover: item.video?.cover?.url_list?.[0] || '',
-            duration: Math.round((item.duration || 0) / 1000),
+            cover: aweme.video?.cover?.url_list?.[0] || '',
+            duration: Math.round((aweme.duration || 0) / 1000),
             stats: {
-              likes: item.statistics?.digg_count || 0,
-              views: item.statistics?.play_count || 0,
-              comments: item.statistics?.comment_count || 0,
-              shares: item.statistics?.share_count || 0
+              likes: aweme.statistics?.digg_count || 0,
+              views: aweme.statistics?.play_count || 0,
+              comments: aweme.statistics?.comment_count || 0,
+              shares: aweme.statistics?.share_count || 0
             },
             downloads
           };
         }
-      } catch (itemErr) {
-        console.warn('Douyin iteminfo fallback error:', itemErr.message);
+      } catch (detailErr) {
+        console.warn('Douyin detail err:', detailErr.message);
       }
     }
 
@@ -257,7 +263,7 @@ async function extractDouyin(rawInput) {
       author: {
         name: 'Douyin Creator',
         username: '',
-        avatar: ''
+        avatar: 'https://p3-pc-sign.douyinpic.com/tos-cn-p-0015/logo.png'
       },
       cover: 'https://p3-pc-sign.douyinpic.com/tos-cn-p-0015/logo.png',
       duration: 0,
@@ -265,7 +271,7 @@ async function extractDouyin(rawInput) {
       downloads: [
         {
           type: 'video',
-          label: 'Tải Video Douyin (Qua Cổng SnapTik HD)',
+          label: 'Tải Video Douyin Không Logo (Qua Cổng SnapTik)',
           quality: '1080p Full HD',
           url: `https://snaptik.app/vn?url=${encodeURIComponent(cleanUrl)}`,
           isExternal: true,
