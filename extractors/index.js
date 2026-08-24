@@ -1,5 +1,6 @@
 const { extractTikTok } = require('./tiktok');
 const { extractDouyin } = require('./douyin');
+const { extractXiaohongshu } = require('./xiaohongshu');
 const { extractYouTube } = require('./youtube');
 const { extractFacebook } = require('./facebook');
 const { extractInstagram } = require('./instagram');
@@ -18,7 +19,12 @@ async function analyzeUrl(rawUrl) {
     return await extractDouyin(rawUrl);
   }
 
-  // 2. Extract standard URL for other platforms
+  // 2. Detect Xiaohongshu / RedNote / Tiểu Hồng Thư
+  if (/xiaohongshu\.com|xhslink\.com|rednote|xhs/i.test(rawUrl)) {
+    return await extractXiaohongshu(rawUrl);
+  }
+
+  // 3. Extract standard URL for other platforms
   const urlMatch = rawUrl.match(/https?:\/\/[^\s]+/);
   if (!urlMatch && !/tiktok|facebook|instagram|youtube|youtu\.be/i.test(rawUrl)) {
     throw new Error('Không tìm thấy đường link URL hợp lệ trong nội dung bạn nhập.');

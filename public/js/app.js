@@ -181,7 +181,8 @@ const App = {
       tiktok: 'Dán link TikTok (vt.tiktok.com hoặc tiktok.com/@user/video/)...',
       youtube: 'Dán link YouTube hoặc YouTube Shorts...',
       facebook: 'Dán link video hoặc Facebook Reels...',
-      instagram: 'Dán link Instagram Reels hoặc Post...'
+      instagram: 'Dán link Instagram Reels hoặc Post...',
+      xiaohongshu: 'Dán link hoặc đoạn chia sẻ Tiểu Hồng Thư (小红书 / RedNote)...'
     };
     urlInput.placeholder = placeholders[platform] || placeholders.all;
   },

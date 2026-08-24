@@ -87,6 +87,15 @@ const SUPPORTED_PLATFORMS = [
     placeholder: 'https://www.instagram.com/reel/... hoặc https://www.instagram.com/p/...'
   },
   {
+    id: 'xiaohongshu',
+    name: 'Tiểu Hồng Thư (小红书)',
+    icon: 'fa-solid fa-book-open',
+    color: '#ff2442',
+    badge: 'Video & Album HD',
+    features: ['Video HD không logo', 'Tải trọn bộ Album ảnh', 'Ảnh gốc sắc nét'],
+    placeholder: 'http://xhslink.com/... hoặc dán link Tiểu Hồng Thư (小红书)'
+  },
+  {
     id: 'generic',
     name: 'X / Twitter, Threads & Khác',
     icon: 'fa-solid fa-globe',
