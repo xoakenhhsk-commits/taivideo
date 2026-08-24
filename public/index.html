@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OmniFetch Studio - Tải Video & Audio Đa Nền Tảng Không Logo (Douyin, TikTok, YouTube, Facebook)</title>
+  <meta name="description" content="Công cụ tải video Douyin, TikTok không logo, YouTube Shorts, Facebook Reels và tách nhạc MP3 chất lượng cao miễn phí trực tiếp về máy.">
+  
+  <!-- Google Fonts: Be Vietnam Pro, Plus Jakarta Sans, Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Ambient Gradient Background Glows -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+  <div class="ambient-glow glow-3"></div>
+
+  <!-- Header Navigation -->
+  <header class="site-header">
+    <div class="container nav-container">
+      <a href="#" class="brand-logo" id="brandLogo">
+        <div class="logo-icon">
+          <i class="fa-solid fa-bolt-lightning"></i>
+        </div>
+        <div class="logo-text">
+          <span class="logo-title">OmniFetch<span class="accent-dot">.</span></span>
+          <span class="logo-subtitle">Media Studio Pro</span>
+        </div>
+      </a>
+
+      <div class="nav-actions">
+        <button class="nav-btn" id="btnOpenHistory" title="Lịch sử tải">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+          <span>Lịch sử</span>
+          <span class="history-badge" id="historyBadge">0</span>
+        </button>
+        <a href="#supported-platforms" class="nav-btn">
+          <i class="fa-solid fa-layer-group"></i>
+          <span>Nền tảng</span>
+        </a>
+        <a href="#faq-section" class="nav-btn">
+          <i class="fa-regular fa-circle-question"></i>
+          <span>Hướng dẫn</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Top Leaderboard Ad Slot -->
+  <div class="container ad-slot-container" id="topAdSlot">
+    <div class="ad-banner top-leaderboard">
+      <div class="ad-badge">QUẢNG CÁO TÀI TRỢ</div>
+      <a href="https://www.profitableratecpmnetwork.com/eb3uztr393?key=96265ec7882b8c93c5a280ddc5e156f9" target="_blank" rel="noopener sponsored" class="ad-link" id="topAdLink">
+        <div class="ad-content">
+          <i class="fa-solid fa-fire text-pink"></i>
+          <span class="ad-title" id="topAdTitle">⚡ Siêu Sale Hôm Nay: Hàng ngàn mã Freeship 0Đ & Voucher giảm 50%</span>
+          <span class="ad-cta-btn" id="topAdCta">Xem Ngay <i class="fa-solid fa-arrow-right"></i></span>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <section class="hero-section">
+      <div class="container">
+        <!-- Hero Header -->
+        <div class="hero-badge">
+          <span class="pulsing-dot"></span>
+          <span>Hệ thống Tự Xử Lý Trực Tiếp 100% • Không Chuyển Hướng Web Khác</span>
+        </div>
+
+        <h1 class="hero-title">
+          Tải Video & Âm Thanh <br>
+          <span class="gradient-text">Đa Nền Tảng Trực Tiếp</span>
+        </h1>
+        <p class="hero-desc">
+          Tải video không dính watermark từ <strong>Douyin, TikTok, YouTube, Facebook, Instagram</strong> với chất lượng gốc Full HD và tách nhạc MP3 về máy chỉ trong 1 chạm.
+        </p>
+
+        <!-- Platform Filter Tabs -->
+        <div class="platform-chips" id="platformChips">
+          <button class="chip active" data-platform="all"><i class="fa-solid fa-globe"></i> Tất cả</button>
+          <button class="chip" data-platform="douyin"><i class="fa-brands fa-tiktok text-cyan"></i> Douyin (抖音)</button>
+          <button class="chip" data-platform="tiktok"><i class="fa-brands fa-tiktok text-pink"></i> TikTok</button>
+          <button class="chip" data-platform="youtube"><i class="fa-brands fa-youtube text-red"></i> YouTube</button>
+          <button class="chip" data-platform="facebook"><i class="fa-brands fa-facebook text-blue"></i> Facebook</button>
+          <button class="chip" data-platform="instagram"><i class="fa-brands fa-instagram text-magenta"></i> Instagram</button>
+        </div>
+
+        <!-- URL Input Box Container -->
+        <div class="search-box-wrapper">
+          <form class="search-form" id="fetchForm">
+            <div class="input-container">
+              <i class="fa-solid fa-link input-icon"></i>
+              <input 
+                type="text" 
+                id="urlInput" 
+                class="search-input" 
+                placeholder="Dán link Douyin, TikTok, YouTube, Facebook, Instagram vào đây..." 
+                autocomplete="off" 
+                spellcheck="false"
+                required
+              >
+              
+              <div class="input-actions">
+                <button type="button" class="btn-input-action" id="btnClear" title="Xóa">
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
+                <button type="button" class="btn-input-action btn-paste" id="btnPaste" title="Dán từ bộ nhớ tạm">
+                  <i class="fa-solid fa-paste"></i>
+                  <span>Dán link</span>
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-submit" id="btnSubmit">
+              <span class="btn-text">
+                <i class="fa-solid fa-cloud-arrow-down"></i>
+                Lấy Link Tải
+              </span>
+              <span class="btn-loader" style="display: none;">
+                <i class="fa-solid fa-circle-notch fa-spin"></i>
+                Đang xử lý...
+              </span>
+            </button>
+          </form>
+
+          <!-- Quick Demo Suggestions -->
+          <div class="quick-demo-wrapper">
+            <span class="quick-demo-title"><i class="fa-solid fa-wand-magic-sparkles"></i> Thử nhanh link mẫu:</span>
+            <div class="quick-demo-list" id="quickDemoList">
+              <button class="demo-btn" data-url="https://www.tiktok.com/@tiktok/video/7106594312292453678">
+                <i class="fa-brands fa-tiktok"></i> TikTok Demo
+              </button>
+              <button class="demo-btn" data-url="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+                <i class="fa-brands fa-youtube"></i> YouTube Demo
+              </button>
+              <button class="demo-btn" data-url="https://v.douyin.com/iLeQY7v/">
+                <i class="fa-solid fa-film"></i> Douyin Demo
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Result / Preview Section -->
+        <div class="result-section" id="resultSection" style="display: none;">
+          <div class="result-card">
+            <!-- Media Preview Header -->
+            <div class="result-card-header">
+              <div class="author-info">
+                <img id="authorAvatar" class="author-avatar" src="" alt="Avatar" onerror="this.src='https://ui-avatars.com/api/?name=User&background=random'">
+                <div>
+                  <h3 id="authorName" class="author-name">Tác giả</h3>
+                  <span id="platformBadge" class="platform-badge">TikTok</span>
+                </div>
+              </div>
+              <div class="video-metrics" id="videoMetrics">
+                <span class="metric-item" id="metricLikes"><i class="fa-solid fa-heart"></i> 0</span>
+                <span class="metric-item" id="metricViews"><i class="fa-solid fa-play"></i> 0</span>
+              </div>
+            </div>
+
+            <!-- Media Preview Body -->
+            <div class="result-card-body">
+              <div class="media-preview-container">
+                <!-- Video Player Preview -->
+                <div class="video-wrapper" id="videoWrapper">
+                  <video id="videoPlayer" class="video-player" controls preload="metadata" poster=""></video>
+                </div>
+                
+                <!-- Image Album Grid (For Douyin / TikTok / Instagram Photo slides) -->
+                <div class="album-grid" id="albumGrid" style="display: none;"></div>
+              </div>
+
+              <!-- Media Info & Download Actions -->
+              <div class="media-details">
+                <h2 id="videoTitle" class="video-title">Tiêu đề video</h2>
+
+                <!-- In-Card Native Sponsor Banner -->
+                <div class="in-card-ad" id="inCardAd">
+                  <div class="ad-badge small">ĐỐI TÁC TÀI TRỢ</div>
+                  <a href="https://www.profitableratecpmnetwork.com/eb3uztr393?key=96265ec7882b8c93c5a280ddc5e156f9" target="_blank" rel="noopener sponsored" class="in-card-ad-box" id="inCardAdLink">
+                    <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=300&auto=format&fit=crop&q=80" class="in-card-ad-img" id="inCardAdImg" alt="Ad">
+                    <div class="in-card-ad-text">
+                      <h6 id="inCardAdTitle">Voucher Shopee Giảm Đến 50%</h6>
+                      <p id="inCardAdDesc">Nhận ngay ưu đãi miễn phí vận chuyển toàn quốc cho đơn hàng hôm nay.</p>
+                    </div>
+                    <span class="in-card-ad-btn">Nhận Ngay</span>
+                  </a>
+                </div>
+
+                <!-- Download Options Grid -->
+                <div class="download-section">
+                  <h4 class="download-section-title">
+                    <i class="fa-solid fa-download"></i> Các lựa chọn tải về máy:
+                  </h4>
+                  <div class="download-grid" id="downloadGrid">
+                    <!-- Dynamic Download Buttons Injected by JS -->
+                  </div>
+                </div>
+
+                <!-- Embedded Audio Player if MP3 exists -->
+                <div class="audio-player-box" id="audioPlayerBox" style="display: none;">
+                  <div class="audio-header">
+                    <i class="fa-solid fa-music"></i>
+                    <span>Nghe thử nhạc nền (Audio MP3)</span>
+                  </div>
+                  <audio id="audioPreview" controls preload="none" style="width: 100%;"></audio>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Skeleton Loading Placeholder -->
+        <div class="skeleton-card" id="skeletonCard" style="display: none;">
+          <div class="skeleton-header">
+            <div class="skeleton-avatar skeleton-shimmer"></div>
+            <div class="skeleton-lines">
+              <div class="skeleton-line skeleton-shimmer w-40"></div>
+              <div class="skeleton-line skeleton-shimmer w-20"></div>
+            </div>
+          </div>
+          <div class="skeleton-body">
+            <div class="skeleton-preview skeleton-shimmer"></div>
+            <div class="skeleton-details">
+              <div class="skeleton-line skeleton-shimmer w-80"></div>
+              <div class="skeleton-line skeleton-shimmer w-60"></div>
+              <div class="skeleton-button skeleton-shimmer"></div>
+              <div class="skeleton-button skeleton-shimmer"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Supported Platforms Grid -->
+    <section class="section platforms-section" id="supported-platforms">
+      <div class="container">
+        <div class="section-header text-center">
+          <span class="section-tag">Tính năng vượt trội</span>
+          <h2 class="section-title">Hỗ trợ đầy đủ các nền tảng phổ biến</h2>
+          <p class="section-desc">Trích xuất tự động link trực tiếp chất lượng cao nhất với tốc độ băng thông tối đa.</p>
+        </div>
+
+        <div class="platforms-grid" id="platformsGrid">
+          <!-- Dynamically populated from API -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="section features-section">
+      <div class="container">
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon bg-gradient-blue">
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+            </div>
+            <h3 class="feature-title">Xóa 100% Watermark / Logo</h3>
+            <p class="feature-desc">Tự động loại bỏ logo mờ, ID người dùng và watermark trên Douyin & TikTok giữ nguyên độ nét video gốc.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon bg-gradient-pink">
+              <i class="fa-solid fa-gauge-high"></i>
+            </div>
+            <h3 class="feature-title">Tải Về Trực Tiếp Siêu Nhanh</h3>
+            <p class="feature-desc">Hệ thống xử lý trực tiếp không chuyển hướng sang web quảng cáo bên ngoài, file lưu thẳng vào máy tính/điện thoại.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon bg-gradient-cyan">
+              <i class="fa-solid fa-music"></i>
+            </div>
+            <h3 class="feature-title">Tách Âm Thanh MP3 320kbps</h3>
+            <p class="feature-desc">Tự động trích xuất file nhạc nền bản quyền chất lượng cao từ mọi video để bạn sử dụng làm nhạc chuông/edit.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon bg-gradient-purple">
+              <i class="fa-solid fa-images"></i>
+            </div>
+            <h3 class="feature-title">Tải Album Ảnh & Thumbnail HD</h3>
+            <p class="feature-desc">Hỗ trợ tải trọn bộ ảnh slide Douyin/TikTok và ảnh thumbnail YouTube độ phân giải siêu nét MaxRes.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="section faq-section" id="faq-section">
+      <div class="container">
+        <div class="section-header text-center">
+          <span class="section-tag">Giải đáp thắc mắc</span>
+          <h2 class="section-title">Câu hỏi thường gặp (FAQ)</h2>
+        </div>
+
+        <div class="faq-list">
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>Làm sao để tải video Douyin (TikTok Trung Quốc) không logo?</span>
+              <i class="fa-solid fa-chevron-down faq-arrow"></i>
+            </button>
+            <div class="faq-answer">
+              <p>Bạn chỉ cần mở app Douyin, bấm nút <strong>Chia sẻ (Share) -> Sao chép liên kết (Copy Link)</strong>. Sau đó quay lại website OmniFetch và bấm <strong>Dán link</strong> -> Bấm <strong>Lấy Link Tải</strong> để tải video 1080p không logo trực tiếp về máy.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>File tải về có bị nén giảm chất lượng không?</span>
+              <i class="fa-solid fa-chevron-down faq-arrow"></i>
+            </button>
+            <div class="faq-answer">
+              <p>Không! Hệ thống của chúng tôi tải trực tiếp từ luồng stream gốc cao nhất (1080p/4K đối với YouTube/Douyin và MP3 320kbps), đảm bảo chất lượng nguyên bản.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>Video tải về sẽ được lưu ở đâu trên điện thoại / máy tính?</span>
+              <i class="fa-solid fa-chevron-down faq-arrow"></i>
+            </button>
+            <div class="faq-answer">
+              <p>Trên máy tính, file sẽ nằm trong thư mục <strong>Downloads (Tải về)</strong>. Trên iPhone/iPad, video được lưu vào mục <strong>Tệp (Files)</strong> hoặc bạn có thể chọn <em>Lưu video vào Thư viện ảnh</em>.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- High-Conversion Interstitial Download Modal (Quảng cáo đếm ngược kiếm tiền khi tải) -->
+  <div class="modal-overlay" id="adModalOverlay">
+    <div class="ad-modal-card">
+      <div class="ad-modal-header">
+        <div class="countdown-badge">
+          <div class="timer-circle">
+            <span id="adCountdownText">5</span>
+          </div>
+          <div class="countdown-info">
+            <h4>Đang chuẩn bị file tải về...</h4>
+            <p>Quá trình tải sẽ tự động bắt đầu sau <strong id="adSecondsLeft">5</strong> giây</p>
+          </div>
+        </div>
+        <button class="btn-close-ad-modal" id="btnCloseAdModal" title="Đóng">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="ad-modal-body">
+        <div class="ad-badge">TÀI TRỢ BỞI ĐỐI TÁC</div>
+        
+        <!-- Interactive Sponsor Banner -->
+        <a href="https://www.profitableratecpmnetwork.com/eb3uztr393?key=96265ec7882b8c93c5a280ddc5e156f9" target="_blank" rel="noopener sponsored" class="modal-sponsor-card" id="modalSponsorLink">
+          <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=600&auto=format&fit=crop&q=80" id="modalSponsorImg" class="modal-sponsor-img" alt="Sponsor">
+          <div class="modal-sponsor-content">
+            <span class="sponsor-tag" id="modalSponsorBadge">Được tài trợ</span>
+            <h3 class="sponsor-title" id="modalSponsorTitle">⚡ Siêu Sale Shopee - Giảm Giá Đến 50% & Freeship 0Đ</h3>
+            <p class="sponsor-desc" id="modalSponsorDesc">Hàng triệu mã giảm giá độc quyền dành cho bạn hôm nay. Mua sắm thả ga không lo về giá!</p>
+            <div class="sponsor-cta">
+              <span class="btn-sponsor-action" id="modalSponsorCta">
+                Nhận Mã Giảm Giá Ngay <i class="fa-solid fa-arrow-up-right-from-square"></i>
+              </span>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <div class="ad-modal-footer">
+        <p class="ad-footer-note"><i class="fa-solid fa-shield-halved text-cyan"></i> Nhấp xem ưu đãi của nhà tài trợ để ủng hộ duy trì máy chủ miễn phí!</p>
+        <button class="btn-start-download-now" id="btnStartDownloadNow" disabled>
+          <i class="fa-solid fa-circle-notch fa-spin" id="downloadBtnSpinner"></i>
+          <span id="downloadBtnText">Đang chuẩn bị link tải (5s)...</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- History Drawer / Modal -->
+  <div class="modal-overlay" id="historyModalOverlay">
+    <div class="history-drawer">
+      <div class="drawer-header">
+        <div class="drawer-title">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+          <h3>Lịch sử tải xuống</h3>
+        </div>
+        <div class="drawer-actions">
+          <button class="btn-clear-history" id="btnClearHistory" title="Xóa toàn bộ lịch sử">
+            <i class="fa-solid fa-trash"></i> Xóa hết
+          </button>
+          <button class="btn-close-drawer" id="btnCloseDrawer">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="drawer-body" id="historyList">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Sticky Bottom Floating Ad Banner -->
+  <div class="sticky-bottom-ad" id="stickyBottomAd">
+    <div class="container sticky-ad-container">
+      <a href="https://www.profitableratecpmnetwork.com/eb3uztr393?key=96265ec7882b8c93c5a280ddc5e156f9" target="_blank" rel="noopener sponsored" class="sticky-ad-link" id="stickyAdLink">
+        <div class="sticky-ad-left">
+          <span class="sticky-ad-tag">QC</span>
+          <i class="fa-solid fa-gift text-pink"></i>
+          <span class="sticky-ad-text" id="stickyAdText">🎁 Nhận ưu đãi voucher 50K & Freeship hôm nay!</span>
+        </div>
+        <span class="sticky-ad-btn" id="stickyAdCta">Xem Ngay</span>
+      </a>
+      <button class="btn-close-sticky-ad" id="btnCloseStickyAd" title="Ẩn quảng cáo">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-container">
+      <div class="footer-brand">
+        <div class="logo-icon small">
+          <i class="fa-solid fa-bolt-lightning"></i>
+        </div>
+        <span>OmniFetch Media Studio</span>
+      </div>
+      <p class="footer-disclaimer">
+        Công cụ tải trực tiếp phục vụ mục đích học tập, nghiên cứu và sao lưu nội dung cá nhân. Chúng tôi tôn trọng quyền sở hữu trí tuệ của tác giả nội dung.
+      </p>
+      <div class="footer-copy">
+        © 2026 OmniFetch Studio. Built with speed, elegance & monetization.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/ads-config.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
