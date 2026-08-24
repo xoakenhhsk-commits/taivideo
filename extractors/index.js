@@ -10,24 +10,25 @@ const { extractGeneric } = require('./generic');
  */
 async function analyzeUrl(rawUrl) {
   if (!rawUrl || typeof rawUrl !== 'string') {
-    throw new Error('Vui lòng nhập đường link hợp lệ.');
+    throw new Error('Vui lòng nhập đường link hoặc đoạn chia sẻ hợp lệ.');
   }
 
+  // 1. Detect Douyin (Check full text for douyin domain before extracting URL)
+  if (/douyin\.com|iesdouyin\.com|v\.douyin\.com/i.test(rawUrl)) {
+    return await extractDouyin(rawUrl);
+  }
+
+  // 2. Extract standard URL for other platforms
   const urlMatch = rawUrl.match(/https?:\/\/[^\s]+/);
-  if (!urlMatch) {
+  if (!urlMatch && !/tiktok|facebook|instagram|youtube|youtu\.be/i.test(rawUrl)) {
     throw new Error('Không tìm thấy đường link URL hợp lệ trong nội dung bạn nhập.');
   }
 
-  const url = urlMatch[0];
-
-  // Detect Douyin
-  if (/douyin\.com|iesdouyin\.com|v\.douyin\.com/i.test(url)) {
-    return await extractDouyin(url);
-  }
+  const url = urlMatch ? urlMatch[0] : (rawUrl.startsWith('http') ? rawUrl : `https://${rawUrl.trim()}`);
 
   // Detect TikTok
-  if (/tiktok\.com|vt\.tiktok\.com|vm\.tiktok\.com/i.test(url)) {
-    return await extractTikTok(url);
+  if (/tiktok\.com|vt\.tiktok\.com|vm\.tiktok\.com/i.test(url) || /tiktok\.com/i.test(rawUrl)) {
+    return await extractTikTok(rawUrl);
   }
 
   // Detect YouTube
